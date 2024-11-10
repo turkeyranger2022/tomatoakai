@@ -30,6 +30,7 @@ const correctSound = document.getElementById("correct-sound");
 const incorrectSound = document.getElementById("incorrect-sound");
 const playSound = document.getElementById("play-sound");
 const focusSound = document.getElementById("focus-sound");
+const randomButton = document.getElementById("random-button");
 
 // 初期表示
 function showWord() {
@@ -152,11 +153,22 @@ retryButton.addEventListener("click", () => {
     playSound.play(); // リトライボタンを押したときの音を再生
 });
 
+// ゲームウィンドウが開いたときにバックグラウンドの縦の揺れをオフにする
+function disableBackgroundAnimation() {
+    document.body.classList.add('no-animation');
+}
+
+// ゲームウィンドウが閉じたときにバックグラウンドの縦の揺れをオンにする
+function enableBackgroundAnimation() {
+    document.body.classList.remove('no-animation');
+}
+
+// ゲーム開始時にバックグラウンドの縦の揺れをオフにする
 document.getElementById('play-button').addEventListener('click', function() {
+    disableBackgroundAnimation();
     const gameContainer = document.querySelector('.game-container');
     const playButton = document.getElementById('play-button');
     gameContainer.style.display = 'flex'; // 表示を変更
-    gameContainer.style.animation = 'fadeIn 1s forwards'; // フェードインアニメーションを適用
     playButton.style.display = 'none'; // Playボタンを隠す
     document.querySelector(".left-panel").innerHTML = ""; // Resultをクリア
     inputElement.focus(); // 入力フィールドにフォーカスを設定
@@ -213,7 +225,7 @@ function resetGame() {
     document.querySelector(".left-panel").innerHTML = ''; // Resultをクリア
     document.querySelector('.game-container').style.display = 'none';
     document.getElementById('play-button').style.display = 'block';
-    document.body.classList.remove('no-animation'); // アニメーションを再開
+    enableBackgroundAnimation(); // アニメーションを再開
 }
 
 // ランダムなバックグラウンドイメージを設定する関数
@@ -225,3 +237,17 @@ function setRandomBackgroundImage() {
 
 // ページが読み込まれたときにランダムなバックグラウンドイメージを設定
 window.addEventListener('load', setRandomBackgroundImage);
+
+// Ring of Randomボタンをクリックしたときにランダムなバックグラウンドイメージを設定
+randomButton.addEventListener('click', setRandomBackgroundImage);
+
+// 画像のプリロード
+function preloadImages() {
+    for (let i = 1; i <= 61; i++) {
+        const img = new Image();
+        img.src = `https://media.fromsoftware.jp/eldenring/resources/images/movieandimages/screenshot/4k/${String(i).padStart(2, '0')}.jpg`;
+    }
+}
+
+// ページが読み込まれたときに画像をプリロード
+window.addEventListener('load', preloadImages);

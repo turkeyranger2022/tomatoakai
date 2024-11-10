@@ -293,3 +293,22 @@ body.no-animation {
         font-size: 16px;
     }
 }
+
+.random-button {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-family: 'Cinzel', serif;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.random-button:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+}
