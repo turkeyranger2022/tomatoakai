@@ -17,7 +17,6 @@ let timeLeft = 60; // タイマーの初期値を60秒に設定
 let timerInterval;
 let correctKeys = 0;
 let mistypedKeys = 0;
-let startTime;
 
 // HTML要素を取得
 const wordElement = document.getElementById("character-name");
@@ -53,7 +52,6 @@ function showWord() {
 
 // タイマーの開始
 function startTimer() {
-    startTime = Date.now(); // ゲーム開始時間を記録
     timerInterval = setInterval(() => {
         timeLeft--;
         timerElement.textContent = `Time: ${timeLeft}`;
@@ -146,22 +144,12 @@ inputElement.addEventListener("keydown", (event) => {
 });
 
 retryButton.addEventListener("click", () => {
-    score = 0;
-    timeLeft = 60; // タイマーの初期値を60秒に設定
-    correctKeys = 0;
-    mistypedKeys = 0;
-    scoreElement.textContent = `Score: ${score}`;
-    timerElement.textContent = `Time: ${timeLeft}`;
-    inputElement.style.display = "block"; // 入力を再表示
-    retryButton.style.display = "none"; // 再挑戦ボタンを隠す
-    document.querySelector(".finish-text").remove(); // FINISH!テキストを削除
-    document.querySelector(".left-panel").innerHTML = ""; // Resultをクリア
+    resetGame();
     showWord();
     startTimer();
     inputElement.focus(); // 入力フィールドにフォーカスを設定
     playSound.currentTime = 0; // 再生位置をリセット
     playSound.play(); // リトライボタンを押したときの音を再生
-    document.body.classList.add('no-animation'); // アニメーションを停止
 });
 
 document.getElementById('play-button').addEventListener('click', function() {
@@ -174,7 +162,8 @@ document.getElementById('play-button').addEventListener('click', function() {
     inputElement.focus(); // 入力フィールドにフォーカスを設定
     playSound.currentTime = 0; // 再生位置をリセット
     playSound.play(); // プレイボタンを押したときの音を再生
-    document.body.classList.add('no-animation'); // アニメーションを停止
+    showWord(); // ゲーム開始時にお題を表示
+    startTimer(); // タイマーを開始
 });
 
 document.getElementById('play-button').addEventListener('mouseover', function() {
@@ -189,21 +178,50 @@ retryButton.addEventListener('mouseover', function() {
 
 document.addEventListener('click', function(event) {
     const gameContainer = document.querySelector('.game-container');
-    const playButton = document.getElementById('play-button');
     if (!gameContainer.contains(event.target) && event.target.id !== 'play-button') {
-        gameContainer.style.display = 'none'; // ゲーム画面を非表示にする
-        playButton.style.display = 'block'; // Playボタンを再表示する
-        document.body.classList.remove('no-animation'); // アニメーションを再開
+        resetGame();
     }
 });
-
-// ゲーム開始
-showWord();
-startTimer();
-inputElement.focus(); // 入力フィールドにフォーカスを設定
 
 // ウィンドウがアクティブになったときに入力フィールドにフォーカスを設定
 window.addEventListener("focus", () => inputElement.focus());
 
 // ウィンドウがクリックされたときに入力フィールドにフォーカスを設定
 window.addEventListener("click", () => inputElement.focus());
+
+// Escキーが押されたときにゲームをリセットして閉じる
+window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        resetGame();
+    }
+});
+
+function resetGame() {
+    clearInterval(timerInterval);
+    score = 0;
+    timeLeft = 60;
+    correctKeys = 0;
+    mistypedKeys = 0;
+    scoreElement.textContent = `Score: ${score}`;
+    timerElement.textContent = `Time: ${timeLeft}`;
+    inputElement.innerHTML = '';
+    wordElement.textContent = '';
+    romajiElement.innerHTML = '';
+    characterImage.style.display = 'none';
+    retryButton.style.display = 'none';
+    document.querySelector(".finish-text")?.remove(); // FINISH!テキストを削除
+    document.querySelector(".left-panel").innerHTML = ''; // Resultをクリア
+    document.querySelector('.game-container').style.display = 'none';
+    document.getElementById('play-button').style.display = 'block';
+    document.body.classList.remove('no-animation'); // アニメーションを再開
+}
+
+// ランダムなバックグラウンドイメージを設定する関数
+function setRandomBackgroundImage() {
+    const randomIndex = Math.floor(Math.random() * 61) + 1; // 1から61までのランダムな数値を生成
+    const backgroundImageUrl = `https://media.fromsoftware.jp/eldenring/resources/images/movieandimages/screenshot/4k/${String(randomIndex).padStart(2, '0')}.jpg`;
+    document.body.style.backgroundImage = `url(${backgroundImageUrl})`;
+}
+
+// ページが読み込まれたときにランダムなバックグラウンドイメージを設定
+window.addEventListener('load', setRandomBackgroundImage);

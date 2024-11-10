@@ -1,5 +1,6 @@
 body {
     background: url('https://media.fromsoftware.jp/eldenring/resources/images/movieandimages/screenshot/4k/60.jpg') center center no-repeat;
+
     background-size: cover;
     font-family: 'Cinzel', serif;
     color: white;
@@ -32,6 +33,7 @@ body.no-animation {
     display: none;
     animation: fadeIn 1s forwards;
     background: url('https://media.fromsoftware.jp/eldenring/resources/images/movieandimages/screenshot/4k/30.jpg') center center no-repeat;
+
     background-size: cover;
     padding: 20px;
     border-radius: 10px;
